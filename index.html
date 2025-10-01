@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Partie Multijoueur avec Chat</title>
+</head>
+<body>
+    <h1>Entrée dans la partie</h1>
+    <input type="text" id="nom" placeholder="Votre nom" />
+    <button id="entrerBtn">Entrer</button>
+    <button id="sortirBtn" disabled>Sortir</button>
+
+    <h2>Joueurs dans la partie :</h2>
+    <ul id="listeJoueurs"></ul>
+
+    <h2>Messagerie</h2>
+    <input type="text" id="inputMessage" placeholder="Écrire un message..." />
+    <button id="btnEnvoyer">Envoyer</button>
+    <ul id="messages" style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 5px;"></ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const entrerBtn = document.getElementById('entrerBtn');
+        const sortirBtn = document.getElementById('sortirBtn');
+        const nomInput = document.getElementById('nom');
+        const listeJoueurs = document.getElementById('listeJoueurs');
+
+        const inputMessage = document.getElementById('inputMessage');
+        const btnEnvoyer = document.getElementById('btnEnvoyer');
+        const messages = document.getElementById('messages');
+
+        let joueurLocal = null;
+
+        entrerBtn.onclick = () => {
+            const nom = nomInput.value.trim();
+            if (nom) {
+                socket.emit('entrer', nom);
+            }
+        };
+
+        sortirBtn.onclick = () => {
+            socket.emit('sortir');
+            joueurLocal = null;
+            entrerBtn.disabled = false;
+            sortirBtn.disabled = true;
+            // Optionnel: vider la liste de messages et joueurs ?
+            // messages.innerHTML = '';
+            // listeJoueurs.innerHTML = '';
+        };
+
+        btnEnvoyer.onclick = () => {
+            const message = inputMessage.value.trim();
+            if (message && joueurLocal) {
+                socket.emit('nouveauMessage', message);
+                inputMessage.value = '';
+            }
+        };
+
+        socket.on('entreeConfirmee', (joueur) => {
+            joueurLocal = joueur;
+            alert(`Bienvenue ${joueur.nom}`);
+            entrerBtn.disabled = true;
+            sortirBtn.disabled = false;
+        });
+
+        socket.on('majJoueurs', (joueurs) => {
+            listeJoueurs.innerHTML = '';
+            joueurs.forEach((j, index) => {
+                const li = document.createElement('li');
+                li.textContent = `#${index + 1} - ${j.nom}`;
+                listeJoueurs.appendChild(li);
+            });
+        });
+
+        socket.on('messageDiffuse', (message) => {
+            const li = document.createElement('li');
+            li.textContent = message;
+            messages.appendChild(li);
+            messages.scrollTop = messages.scrollHeight;
+        });
+
+        socket.on('erreur', (msg) => {
+            alert(msg);
+        });
+    </script>
+</body>
+</html>
