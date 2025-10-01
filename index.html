@@ -5,6 +5,116 @@
     <title>Partie Multijoueur avec Chat</title>
 </head>
 <body>
+    <style>
+    /* Typographie et couleurs générales */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f6f8;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1, h2 {
+        color: #222;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    /* Inputs et boutons */
+    input[type="text"] {
+        padding: 10px;
+        margin: 5px 0;
+        width: 250px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    input[type="text"]:focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #4a90e2;
+        color: #fff;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+        background-color: #357ABD;
+        transform: translateY(-2px);
+    }
+
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    /* Listes */
+    ul {
+        list-style: none;
+        padding: 0;
+        width: 300px;
+    }
+
+    li {
+        background: #fff;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+    li:hover {
+        transform: scale(1.02);
+    }
+
+    /* Zone de messages */
+    #messages {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: #fff;
+        border-radius: 8px;
+        width: 300px;
+    }
+
+    #messages li {
+        background: #e7f0fd;
+    }
+
+    /* Conteneur général */
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 10px;
+    }
+
+    .input-group input {
+        flex: 1;
+    }
+</style>
+
     <h1>Entrée dans la partie</h1>
     <input type="text" id="nom" placeholder="Votre nom" />
     <button id="entrerBtn">Entrer</button>
